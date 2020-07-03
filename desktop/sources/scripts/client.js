@@ -21,11 +21,11 @@ function Client () {
   this.history = new History(this)
 
   this.orca = new Orca(this.library)
-  this.io = new IO(this)
+this.accessibility = new Accessibility(this)  
+	this.io = new IO(this)
   this.cursor = new Cursor(this)
   this.commander = new Commander(this)
   this.clock = new Clock(this)
-	this.accessibility = new Accessibility(this)
 
   // Settings
   this.scale = window.devicePixelRatio
@@ -37,7 +37,11 @@ function Client () {
   this.guide = false
 
   this.el = document.createElement('canvas')
-  this.context = this.el.getContext('2d')
+  this.el.setAttribute("id", "grid")
+  this.el.setAttribute("role", "img")
+  this.el.setAttribute("aria-label", "Grid Area")
+  
+    this.context = this.el.getContext('2d')
 
   this.install = (host) => {
     host.appendChild(this.el)
