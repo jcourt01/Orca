@@ -25,6 +25,7 @@ function Client () {
   this.cursor = new Cursor(this)
   this.commander = new Commander(this)
   this.clock = new Clock(this)
+	this.accessibility = new Accessibility(this)
 
   // Settings
   this.scale = window.devicePixelRatio
@@ -114,8 +115,8 @@ function Client () {
     this.acels.set('View', 'Zoom Reset', 'CmdOrCtrl+0', () => { this.modZoom(1, true) })
 
     this.acels.set('Midi', 'Play/Pause Midi', 'CmdOrCtrl+Space', () => { this.clock.togglePlay(true) })
-    this.acels.set('Midi', 'Next Input Device', 'CmdOrCtrl+,', () => { this.clock.setFrame(0); this.io.midi.selectNextInput() })
-    this.acels.set('Midi', 'Next Output Device', 'CmdOrCtrl+.', () => { this.clock.setFrame(0); this.io.midi.selectNextOutput() })
+    this.acels.set('Midi', 'Next Input Device', 'CmdOrCtrl+,', () => { this.clock.setFrame(0); this.io.midi.selectNextInput(); this.accessibility.makeAnnouncement('Next Input Device: ' + this.io.midi.toInputString()) })
+    this.acels.set('Midi', 'Next Output Device', 'CmdOrCtrl+.', () => { this.clock.setFrame(0); this.io.midi.selectNextOutput(); this.accessibility.makeAnnouncement('Next Output Device: ' + this.io.midi.toOutputString()) })
     this.acels.set('Midi', 'Refresh Devices', 'CmdOrCtrl+Shift+M', () => { this.io.midi.refresh() })
 
     this.acels.set('Communication', 'Choose OSC Port', 'alt+O', () => { this.commander.start('osc:') })
