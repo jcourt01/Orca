@@ -37,7 +37,9 @@ function Cursor (client) {
     this.h = rect.h
     this.calculateBounds()
     client.toggleGuide(false)
+
     client.update()
+	client.accessibility.makeAnnouncement(this.announcement())
   }
 
   this.selectAll = () => {
@@ -112,6 +114,16 @@ function Cursor (client) {
     if (client.orca.lockAt(this.x, this.y)) { return 'locked' }
     return 'empty'
   }
+
+  this.announcement = () => {
+    if (this.w !== 0 || this.h !== 0) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} multi` }
+    const index = client.orca.indexAt(this.x, this.y)
+    const port = client.ports[index]
+    if (port) { return `X ${this.x} Y ${this.y} value ${this.read()} ${port[3]}` }
+    if (client.orca.lockAt(this.x, this.y)) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} locked` }
+    return `X ${this.x} Y ${this.y} value empty`
+  }
+
 
   this.trigger = () => {
     const operator = client.orca.operatorAt(this.x, this.y)
