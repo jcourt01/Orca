@@ -116,12 +116,12 @@ function Cursor (client) {
   }
 
   this.announcement = () => {
-    if (this.w !== 0 || this.h !== 0) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} multi` }
+    if (this.w !== 0 || this.h !== 0) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} ${this.ins} multi` }
     const index = client.orca.indexAt(this.x, this.y)
     const port = client.ports[index]
-    if (port) { return `X ${this.x} Y ${this.y} value ${this.read()} ${port[3]}` }
-    if (client.orca.lockAt(this.x, this.y)) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} locked` }
-    return `X ${this.x} Y ${this.y} value empty`
+    if (port) { return `X ${this.x} Y ${this.y} value ${this.read()} ${port[3]}  ${this.ins}` }
+    if (client.orca.lockAt(this.x, this.y)) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} ${this.ins} locked` }
+    return `X ${this.x} Y ${this.y} ${this.ins}  empty`
   }
 
 
