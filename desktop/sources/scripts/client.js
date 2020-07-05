@@ -210,6 +210,7 @@ this.accessibility = new Accessibility(this)
     const w = clamp(this.grid.w + x, 4, 16)
     const h = clamp(this.grid.h + y, 4, 16)
     this.setGrid(w, h)
+	  this.accessibility.makeAnnouncement(`${this.grid.w}/${this.grid.h}`)
   }
 
   this.modZoom = (mod = 0, reset = false) => {
