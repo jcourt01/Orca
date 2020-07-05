@@ -45,6 +45,7 @@ function Cursor (client) {
   this.selectAll = () => {
     this.select(0, 0, client.orca.w, client.orca.h)
     this.ins = false
+	  this.announceInsert()
   }
 
   this.move = (x, y) => {
@@ -82,6 +83,10 @@ function Cursor (client) {
     return client.orca.glyphAt(this.x, this.y)
   }
 
+  this.readAt = (x, y) => {
+    return client.orca.glyphAt(x, y)
+  }
+
   this.write = (g) => {
     if (!client.orca.isAllowed(g)) { return }
     if (client.orca.write(this.x, this.y, g) && this.ins) {
@@ -116,15 +121,31 @@ function Cursor (client) {
   }
 
   this.announcement = () => {
-    if (this.w !== 0 || this.h !== 0) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} ${this.ins} multi` }
-    const index = client.orca.indexAt(this.x, this.y)
+    if (this.w !== 0 || this.h !== 0) {
+		var x = this.x+this.w
+		var y = this.y+this.h
+		
+		 return `${this.w} Width ${this.h} Height ${this.announcementAt(x, y)}` 
+	}
+
+    return this.announcementAt(this.x, this.y)
+  }
+
+  this.announcementAt = (x, y) => {
+
+    const index = client.orca.indexAt(x, y)
     const port = client.ports[index]
-    if (port) { return `X ${this.x} Y ${this.y} value ${this.read()} ${port[3]}  ${this.ins}` }
-    if (client.orca.lockAt(this.x, this.y)) { return `X ${this.x} Y ${this.y} Width ${this.w} Height ${this.h} ${this.ins} locked` }
-    return `X ${this.x} Y ${this.y} ${this.ins}  empty`
+    if (port) { return `${x}X ${y}Y ${this.readAt(x,y)} Value ${port[3]}` }
+    if (client.orca.lockAt(x, y)) { return `${x}X ${y}Y locked` }
+    return `${x}X ${y}Y empty`
   }
 
 
+  this.announceInsert = () => {
+	  var insStatus = this.ins ? 'Insert On' : 'Insert Off'
+	  client.accessibility.makeAnnouncement(insStatus)
+  }
+  
   this.trigger = () => {
     const operator = client.orca.operatorAt(this.x, this.y)
     if (!operator) { console.warn('Cursor', 'Nothing to trigger.'); return }
@@ -232,7 +253,7 @@ function Cursor (client) {
     const data = e.clipboardData.getData('text/plain').trim()
     client.orca.writeBlock(this.minX, this.minY, data, this.ins)
     client.history.record(client.orca.s)
-    this.scaleTo(data.split(/\r?\n/)[0].length - 1, data.split(/\r?\n/).length - 1)
+    this.scaleTo(data.split(/\r?\n/)[0].length - 1,  data.split(/\r?\n/).length - 1)
     e.preventDefault()
   }
 
