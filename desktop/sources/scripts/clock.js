@@ -54,6 +54,10 @@ function Clock (client) {
       this.stop(msg)
     }
     client.update()
+
+
+var state = this.isPaused ? 'Pause' : 'Play'
+		client.accessibility.makeAnnouncement(`${this.speed.value} ${state}`)
   }
 
   this.play = function (msg = false) {
