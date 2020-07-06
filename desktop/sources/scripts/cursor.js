@@ -84,7 +84,7 @@ function Cursor (client) {
   }
 
   this.readAt = (x, y) => {
-    return client.orca.glyphAt(x, y)
+    return '' + client.orca.glyphAt(x, y)
   }
 
   this.write = (g) => {
@@ -132,12 +132,14 @@ function Cursor (client) {
   }
 
   this.announcementAt = (x, y) => {
-
+	  var value = this.readAt(x,y)
+	  value = value === '.' ? 'empty' : value
+	  
     const index = client.orca.indexAt(x, y)
     const port = client.ports[index]
-    if (port) { return `${x}X ${y}Y ${this.readAt(x,y)} Value ${port[3]}` }
-    if (client.orca.lockAt(x, y)) { return `${x}X ${y}Y locked` }
-    return `${x}X ${y}Y empty`
+    if (port) { return `${x}X ${y}Y ${value} Value ${port[3]}` }
+    if (client.orca.lockAt(x, y)) { return `${x}X ${y}Y ${value} Value locked` }
+    return `${x}X ${y}Y ${value} Value`
   }
 
 
@@ -255,6 +257,37 @@ function Cursor (client) {
     client.history.record(client.orca.s)
     this.scaleTo(data.split(/\r?\n/)[0].length - 1,  data.split(/\r?\n/).length - 1)
     e.preventDefault()
+  }
+
+  this.getPrevOrca = () => {
+	  var prevOrca = []
+	  
+    for (let y = this.minY; y <= this.maxY; y++) {
+      for (let x = this.minX; x <= this.maxX; x++) {
+		  prevOrca.push( this.readAt(x,y))
+      }
+    }
+console.log(prevOrca.length + ' length')	
+	return prevOrca
+  }
+
+  this.trackChanges = (prevOrca) => {
+	  var text = ''
+	  var changeCount = 0
+	  
+    for (let y = this.minY; y <= this.maxY; y++) {
+      for (let x = this.minX; x <= this.maxX; x++) {
+		  if ( prevOrca[x*y] !== client.orca.glyphAt(x,y)) {
+		  	text = text + `${x}X ${y}Y ${this.inspect()} From ${prevOrca[x*y]} To ${client.orca.glyphAt(x,y)}\n`
+			  changeCount++
+		  }
+      }
+    }
+	
+text = `${changeCount} Changes\n` + text
+	document.querySelector('#changes').textContent = text
+	
+	return changeCount
   }
 
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
