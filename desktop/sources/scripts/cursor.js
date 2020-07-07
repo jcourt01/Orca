@@ -150,6 +150,10 @@ function Cursor (client) {
     return returnValue
   }
 
+  this.equalsCoords = (x,y) => {
+	  return (this.x === x && this.y === y)
+  }
+  
   this.announceInsert = () => {
 	  var insStatus = this.ins ? 'Insert On' : 'Insert Off'
 	  client.accessibility.makeAnnouncement(insStatus)
