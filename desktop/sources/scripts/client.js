@@ -102,7 +102,7 @@ this.accessibility = new Accessibility(this)
     this.acels.set('Move', 'Scale West(Leap)', 'CmdOrCtrl+Shift+ArrowLeft', () => { this.cursor.scale(-this.grid.w, 0) })
 
     this.acels.set('Clock', 'Play/Pause', 'Space', () => { if (this.cursor.ins) { this.cursor.move(1, 0) } else { this.clock.togglePlay(false) } })
-    this.acels.set('Clock', 'Frame By Frame', 'CmdOrCtrl+F', () => { this.clock.touch(); 	this.accessibility.makeAnnouncement(`Frame ${this.orca.f}`) })
+    this.acels.set('Clock', 'Frame By Frame', 'CmdOrCtrl+F', () => { var prevOrca = this.cursor.getPrevOrca(); this.clock.touch(); this.cursor.trackChanges(prevOrca, this.orca.f); })
     this.acels.set('Clock', 'Reset Frame', 'CmdOrCtrl+Shift+R', () => { this.clock.setFrame(0) })
     this.acels.set('Clock', 'Incr. Speed', '>', () => { this.clock.modSpeed(1) })
     this.acels.set('Clock', 'Decr. Speed', '<', () => { this.clock.modSpeed(-1) })
