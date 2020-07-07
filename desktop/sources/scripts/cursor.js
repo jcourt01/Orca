@@ -150,6 +150,18 @@ function Cursor (client) {
     return returnValue
   }
 
+  this.addPadding = () => {
+	  var returnValue = this.selection()
+	  
+	  var max = Math.random()*20
+	  
+	  for(let i=0; i<max; i++ ) {
+	  returnValue += '.'  
+	  }
+  
+  return returnValue
+}
+
   this.equalsCoords = (x,y) => {
 	  return (this.x === x && this.y === y)
   }
