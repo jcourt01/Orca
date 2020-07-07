@@ -283,32 +283,38 @@ function Cursor (client) {
   }
 
   this.getPrevOrca = () => {
-	  var prevOrca = []
+var prevOrca = []
 	  
-    for (let y = this.minY; y <= this.maxY; y++) {
-      for (let x = this.minX; x <= this.maxX; x++) {
-		  prevOrca.push( this.readTextAt(x,y))
-      }
-    }
-console.log(prevOrca.length + ' length')	
+      for (let y = this.minY; y <= this.maxY; y++) {
+        for (let x = this.minX; x <= this.maxX; x++) {
+			prevOrca.push(this.readTextAt(x,y))
+		}
+	}
+	  
 	return prevOrca
   }
 
-  this.trackChanges = (prevOrca) => {
+  this.trackChanges = (prevOrca, frame) => {
 	  var text = ''
+	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
+	  var i = 0
 	  
-    for (let y = this.minY; y <= this.maxY; y++) {
-      for (let x = this.minX; x <= this.maxX; x++) {
-		  if ( prevOrca[x*y] !== client.orca.glyphAt(x,y)) {
-		  	text = text + `${x}X ${y}Y ${this.inspect()} From ${prevOrca[x*y]} To ${client.orca.glyphAt(x,y)}\n`
-			  changeCount++
+      for (let y = this.minY; y <= this.maxY; y++) {
+        for (let x = this.minX; x <= this.maxX; x++) {
+		  if ( prevOrca[i] !== newOrca[i]) {
+			  text += this.announcementAt(prevOrca[i], x, y) + ' To ' + this.announcementAt(newOrca[i], x, y, false)			  
+				  changeCount++
+			  i++
 		  }
       }
-    }
+  }
+    
 	
 text = `${changeCount} Changes\n` + text
 	document.querySelector('#changes').textContent = text
+	
+	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount}`)
 	
 	return changeCount
   }
