@@ -83,7 +83,7 @@ function Cursor (client) {
     return client.orca.glyphAt(this.x, this.y)
   }
 
-  this.readAt = (x, y) => {
+  this.readTextAt = (x, y) => {
     return '' + client.orca.glyphAt(x, y)
   }
 
@@ -121,27 +121,34 @@ function Cursor (client) {
   }
 
   this.announcement = () => {
+	  	  var value = this.readTextAt(this.x,this.y)
+	  
     if (this.w !== 0 || this.h !== 0) {
 		var x = this.x+this.w
 		var y = this.y+this.h
 		
-		 return `${this.w} Width ${this.h} Height ${this.announcementAt(x, y)}` 
+		 return `${this.w} Width ${this.h} Height ${this.announcementAt(value, x, y)}` 
 	}
 
-    return this.announcementAt(this.x, this.y)
+    return this.announcementAt(value, this.x, this.y)
   }
 
-  this.announcementAt = (x, y) => {
-	  var value = this.readAt(x,y)
+  this.announcementAt = (value, x, y, includeXY=true) => {
 	  value = value === '.' ? 'empty' : value
+	  	  value = value === '*' ? 'bang' : value
+	  
+	  var returnValue = value + ' Value'
+	  
+	  if(includeXY) {
+	  	returnValue = `${x}X ${y}Y ` + returnValue
+	  }
 	  
     const index = client.orca.indexAt(x, y)
     const port = client.ports[index]
-    if (port) { return `${x}X ${y}Y ${value} Value ${port[3]}` }
-    if (client.orca.lockAt(x, y)) { return `${x}X ${y}Y ${value} Value locked` }
-    return `${x}X ${y}Y ${value} Value`
+    if (port) {return returnValue + ` ${port[3]}`}
+    if (client.orca.lockAt(x, y)) {return returnValue +  ' Locked'}
+    return returnValue
   }
-
 
   this.announceInsert = () => {
 	  var insStatus = this.ins ? 'Insert On' : 'Insert Off'
@@ -264,7 +271,7 @@ function Cursor (client) {
 	  
     for (let y = this.minY; y <= this.maxY; y++) {
       for (let x = this.minX; x <= this.maxX; x++) {
-		  prevOrca.push( this.readAt(x,y))
+		  prevOrca.push( this.readTextAt(x,y))
       }
     }
 console.log(prevOrca.length + ' length')	
