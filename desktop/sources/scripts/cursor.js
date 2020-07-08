@@ -306,7 +306,6 @@ returnValue += `${value}`
 	  var text = ''
 	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
-	  var i = 0
 	  
 	 
       for (let y = this.minY; y <= this.maxY; y++) {
@@ -314,9 +313,8 @@ returnValue += `${value}`
 var prevOrcaValue = prevOrca.shift()
 			var newOrcaValue = newOrca.shift()
 		  if ( prevOrcaValue !== newOrcaValue) {
-			  text += this.announcementAt(prevOrcaValue, x, y) + ' To ' + this.announcementAt(newOrcaValue, x, y, false)			  
-				  changeCount++
-			  i++
+			  				  changeCount++
+			  text += `${frame}.${changeCount} ` + this.announcementAt(prevOrcaValue, x, y) + ' To ' + this.announcementAt(newOrcaValue, x, y, false, false)			  
 		  }
       }
   }
@@ -325,9 +323,7 @@ var prevOrcaValue = prevOrca.shift()
 text = `${changeCount} Changes\n` + text
 	document.querySelector('#changes').textContent = text
 	
-	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} len ${newOrca.length} newOrca ${newOrca} prevOrca ${prevOrca}`)
-	
-	return changeCount
+	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount}`)	
   }
 
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
