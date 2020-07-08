@@ -283,14 +283,15 @@ function Cursor (client) {
   }
 
   this.getPrevOrca = () => {
-var prevOrca = []
-	  
+
+	  var prevOrca = []
+
       for (let y = this.minY; y <= this.maxY; y++) {
         for (let x = this.minX; x <= this.maxX; x++) {
 			prevOrca.push(this.readTextAt(x,y))
 		}
 	}
-	  
+			
 	return prevOrca
   }
 
@@ -300,21 +301,24 @@ var prevOrca = []
 	  var changeCount = 0
 	  var i = 0
 	  
+	 
       for (let y = this.minY; y <= this.maxY; y++) {
         for (let x = this.minX; x <= this.maxX; x++) {
-		  if ( prevOrca[i] !== newOrca[i]) {
-			  text += this.announcementAt(prevOrca[i], x, y) + ' To ' + this.announcementAt(newOrca[i], x, y, false)			  
+var prevOrcaValue = prevOrca.shift()
+			var newOrcaValue = newOrca.shift()
+		  if ( prevOrcaValue !== newOrcaValue) {
+			  text += this.announcementAt(prevOrcaValue, x, y) + ' To ' + this.announcementAt(newOrcaValue, x, y, false)			  
 				  changeCount++
 			  i++
 		  }
       }
   }
     
-	
+	  	  	  	 	client.accessibility.makeAnnouncement('testing 5 ' + newOrca.length)     	
 text = `${changeCount} Changes\n` + text
 	document.querySelector('#changes').textContent = text
 	
-	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount}`)
+	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} len ${newOrca.length} newOrca ${newOrca} prevOrca ${prevOrca}`)
 	
 	return changeCount
   }
