@@ -318,13 +318,34 @@ returnValue += `${value}`
 
   this.findNextItem = (ignoreBang=true) => {
 
-      for (let y = 0; y < client.orca.h; y++) {
-        for (let x = 0; x < client.orca.w; x++) {
+var found = false
+	  var curX = this.x
+	  var curY = this.y
+	  
+	  for( let y=0; y < client.orca.h; y++ ) {
+      for (let x = 0; x < client.orca.w; x++) {
 			var item = '' + client.orca.glyphAt(x,y)
-			var searching = (y > this.y) || (y=== this.y && x >= this.x)
+			var searching = found === false && (y > curY) || (y=== curY && x >= curX)
+			
+			if(searching === true && ((ignoreBang === false && item === '*') ||  item !== '.')) {
+				this.moveTo(x,y)
+			 	found = true
+			}
+	
+		}
+		}
+			
+  }
+  this.findPreviousItem = (ignoreBang=true) => {
+
+      for (let x =client.orca.w-1; x > -1; x-- ) {
+        for (let y =client.orca.h-1; y > -1; y--) {
+			var item = '' + client.orca.glyphAt(x,y)
+			var searching = (y < this.y) || (y=== this.y && x <= this.x)
 			
 			if(searching && (item !== '.' || (!ignoreBang && item === '*'))) {
-				this.select(x,y)
+				this.moveTo(x,y)
+				break;
 			}
 		}
 	}
