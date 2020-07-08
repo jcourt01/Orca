@@ -303,10 +303,8 @@ returnValue += `${value}`
   }
 
   this.trackChanges = (prevOrca, frame) => {
-	  var text = ''
 	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
-	  
 	 
       for (let y = this.minY; y <= this.maxY; y++) {
         for (let x = this.minX; x <= this.maxX; x++) {
@@ -314,15 +312,11 @@ var prevOrcaValue = prevOrca.shift()
 			var newOrcaValue = newOrca.shift()
 		  if ( prevOrcaValue !== newOrcaValue) {
 			  				  changeCount++
-			  text += `${frame}.${changeCount} ` + this.announcementAt(prevOrcaValue, x, y) + ' To ' + this.announcementAt(newOrcaValue, x, y, false, false)			  
+			  var text = `${frame}.${changeCount} ` + this.announcementAt(prevOrcaValue, x, y) + ' To ' + this.announcementAt(newOrcaValue, x, y, false, false)			  
 		  }
       }
   }
     
-	  	  	  	 	client.accessibility.makeAnnouncement('testing 5 ' + newOrca.length)     	
-text = `${changeCount} Changes\n` + text
-	document.querySelector('#changes').textContent = text
-	
 	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount}`)	
   }
 
