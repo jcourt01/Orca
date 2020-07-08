@@ -313,6 +313,52 @@ var prevOrcaValue = prevOrca.shift()
 		  if ( prevOrcaValue !== newOrcaValue) {
 			  				  changeCount++
 			  var text = `${frame}.${changeCount} ` + this.announcementAt(prevOrcaValue, x, y) + ' To ' + this.announcementAt(newOrcaValue, x, y, false, false)			  
+			  
+			  var changeTableElement = document.querySelector('#changeTable')
+			  
+			  if(!changeTableElement) {
+			  	var changesElement = document.querySelector('#changes')
+				  var headerElement = document.createElement('h2')
+				  headerElement.textContent = 'Changes'
+				  changesElement.appendChild(headerElement)
+				  
+				  changeTableElement = document.createElement('table')
+				  				  changeTableElement.setAttribute('id', 'changeTable')
+				  
+				  var thead = document.createElement('thead')
+				  var theadRow = document.createElement('tr')
+				  
+				  var th = document.createElement('th')
+				  th.textContent = 'Frame'
+				  theadRow.appendChild(th)
+				  
+				  th = document.createElement('th')
+				  th.textContent = 'X,Y'
+				  theadRow.appendChild(th)
+				  
+				  th = document.createElement('th')
+				  th.textContent = 'Change'
+				  theadRow.appendChild(th)
+				  thead.appendChild(theadRow)
+				  changeTableElement.appendChild(thead)
+				  changesElement.appendChild(changeTableElement)
+			  }
+			  
+			  var tableRowElement = document.createElement('tr')
+			  var tableData1Element = document.createElement('td')
+			  tableData1Element.textContent = `${frame} #${changeCount}`
+			  tableRowElement.appendChild(tableData1Element)
+			  
+			  var tableData2Element = document.createElement('td')
+			  tableData2Element.textContent = `${x},${y}`
+			  tableRowElement.appendChild(tableData2Element)
+			  
+			  var tableData3Element = document.createElement('td')
+			  tableData3Element.textContent = `${prevOrcaValue} to ${newOrcaValue}`
+			  tableRowElement.appendChild(tableData3Element)
+			  
+			  changeTableElement.appendChild(tableRowElement)
+			  
 		  }
       }
   }
