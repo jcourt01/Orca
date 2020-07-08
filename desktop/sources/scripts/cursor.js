@@ -126,27 +126,34 @@ function Cursor (client) {
     if (this.w !== 0 || this.h !== 0) {
 		var x = this.x+this.w
 		var y = this.y+this.h
+		value = this.readTextAt(x,y)
 		
-		 return `${this.w} Width ${this.h} Height ${this.announcementAt(value, x, y)}` 
+		 return `${this.w} X ${this.h} ${this.announcementAt(value, x, y)}` 
 	}
 
     return this.announcementAt(value, this.x, this.y)
   }
 
-  this.announcementAt = (value, x, y, includeXY=true) => {
+  this.announcementAt = (value, x, y, includeXY=true, includeState=true) => {
 	  value = value === '.' ? 'empty' : value
 	  	  value = value === '*' ? 'bang' : value
 	  
-	  var returnValue = value + ' Value'
+	  var returnValue = ''
 	  
 	  if(includeXY) {
-	  	returnValue = `${x}X ${y}Y ` + returnValue
+	  	returnValue += `${x},${y} `
 	  }
 	  
     const index = client.orca.indexAt(x, y)
     const port = client.ports[index]
-    if (port) {return returnValue + ` ${port[3]}`}
-    if (client.orca.lockAt(x, y)) {return returnValue +  ' Locked'}
+	  
+	  if ( includeState ) {
+    if (port) {returnValue += ` ${port[3]} `}
+    else if (client.orca.lockAt(x, y)) {returnValue += 'Locked'}
+}
+
+returnValue += `${value}`
+
     return returnValue
   }
 
