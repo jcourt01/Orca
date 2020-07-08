@@ -316,6 +316,21 @@ returnValue += `${value}`
 	return prevOrca
   }
 
+  this.findNextItem = (ignoreBang=true) => {
+
+      for (let y = 0; y < client.orca.h; y++) {
+        for (let x = 0; x < client.orca.w; x++) {
+			var item = '' + client.orca.glyphAt(x,y)
+			var searching = (y > this.y) || (y=== this.y && x >= this.x)
+			
+			if(searching && (item !== '.' || (!ignoreBang && item === '*'))) {
+				this.select(x,y)
+			}
+		}
+	}
+			
+  }
+
   this.trackChanges = (prevOrca, frame) => {
 	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
