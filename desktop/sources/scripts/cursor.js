@@ -134,6 +134,20 @@ function Cursor (client) {
     return this.announcementAt(value, this.x, this.y)
   }
 
+  this.getValue= (value, x, y) => {
+  	  value = value === '.' ? 'empty' : value
+  	  	  value = value === '*' ? 'bang' : value
+
+var state = 'None'
+	  
+    const index = client.orca.indexAt(x, y)
+    const port = client.ports[index]
+	  
+    if (port) {state = ` ${port[3]}`}
+    else if (client.orca.lockAt(x, y)) {state = 'Locked'}
+	  return{value: `${value}`, state: `${state}`}
+  }
+  
   this.announcementAt = (value, x, y, includeXY=true, includeState=true) => {
 	  value = value === '.' ? 'empty' : value
 	  	  value = value === '*' ? 'bang' : value
@@ -308,11 +322,11 @@ returnValue += `${value}`
 	 
       for (let y = this.minY; y <= this.maxY; y++) {
         for (let x = this.minX; x <= this.maxX; x++) {
-var prevOrcaValue = prevOrca.shift()
-			var newOrcaValue = newOrca.shift()
-		  if ( prevOrcaValue !== newOrcaValue) {
+var prevOrcaValue = this.getValue(prevOrca.shift(), x, y)
+			var newOrcaValue = this.getValue(newOrca.shift(), x, y)
+			
+		  if ( prevOrcaValue.value !== newOrcaValue.value) {
 			  				  changeCount++
-			  var text = `${frame}.${changeCount} ` + this.announcementAt(prevOrcaValue, x, y) + ' To ' + this.announcementAt(newOrcaValue, x, y, false, false)			  
 			  
 			  var changeTableElement = document.querySelector('#changeTable')
 			  
@@ -339,23 +353,31 @@ var prevOrcaValue = prevOrca.shift()
 				  th = document.createElement('th')
 				  th.textContent = 'Change'
 				  theadRow.appendChild(th)
+				  th = document.createElement('th')
+				  th.textContent = 'State'
+				  theadRow.appendChild(th)
+				  
 				  thead.appendChild(theadRow)
 				  changeTableElement.appendChild(thead)
 				  changesElement.appendChild(changeTableElement)
 			  }
 			  
 			  var tableRowElement = document.createElement('tr')
-			  var tableData1Element = document.createElement('td')
-			  tableData1Element.textContent = `${frame} #${changeCount}`
-			  tableRowElement.appendChild(tableData1Element)
+			  var tableDataElement = document.createElement('td')
+			  tableDataElement.textContent = `${frame} #${changeCount}`
+			  tableRowElement.appendChild(tableDataElement)
 			  
-			  var tableData2Element = document.createElement('td')
-			  tableData2Element.textContent = `${x},${y}`
-			  tableRowElement.appendChild(tableData2Element)
+			  tableDataElement = document.createElement('td')
+			  tableDataElement.textContent = `${x},${y}`
+			  tableRowElement.appendChild(tableDataElement)
 			  
-			  var tableData3Element = document.createElement('td')
-			  tableData3Element.textContent = `${prevOrcaValue} to ${newOrcaValue}`
-			  tableRowElement.appendChild(tableData3Element)
+			  tableDataElement = document.createElement('td')
+			  tableDataElement.textContent = `${prevOrcaValue.value} to ${newOrcaValue.value}`
+			  tableRowElement.appendChild(tableDataElement)
+			  
+			  tableDataElement = document.createElement('td')
+			  tableDataElement.textContent = `${newOrcaValue.state}`
+			  tableRowElement.appendChild(tableDataElement)
 			  
 			  changeTableElement.appendChild(tableRowElement)
 			  
