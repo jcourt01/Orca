@@ -24,6 +24,10 @@ function Clock (client) {
     client.run()
   }
 
+  this.clearChanges = function () {
+	  document.querySelector('#changes').textContent = ""
+  }
+
   this.run = function () {
     if (this.speed.target === this.speed.value) { return }
     this.setSpeed(this.speed.value + (this.speed.value < this.speed.target ? 1 : -1), null, true)
@@ -48,6 +52,8 @@ function Clock (client) {
   // Controls
 
   this.togglePlay = function (msg = false) {
+	  this.clearChanges()
+
     if (this.isPaused === true) {
       this.play(msg)
     } else {
