@@ -325,12 +325,19 @@ var found = false
 	  for( let y=0; y < client.orca.h; y++ ) {
       for (let x = 0; x < client.orca.w; x++) {
 			var item = '' + client.orca.glyphAt(x,y)
-			var searching = found === false && (y > curY) || (y=== curY && x >= curX)
-			
-			if(searching === true && ((ignoreBang === false && item === '*') ||  item !== '.')) {
+		  
+		  var searching = !found&& (y > curY || (y === curY && x >= curX))		  
+		  
+		  if(searching) {
+		  if ( (!ignoreBang && item === '*')) {
+		  				this.moveTo(x,y)
+		  			 	found = true
+		  			}
+			else if(  item !== '.') { 				
 				this.moveTo(x,y)
 			 	found = true
-			}
+			} 
+		}
 	
 		}
 		}
