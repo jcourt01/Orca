@@ -316,7 +316,7 @@ returnValue += `${value}`
 	return prevOrca
   }
 
-  this.findNextItem = (ignoreBang=true) => {
+  this.gotoNextItem = (allowBang) => {
 
 var found = false
 	  var curX = this.x
@@ -324,14 +324,16 @@ var found = false
 	  
 	  for( let y=0; y < client.orca.h; y++ ) {
       for (let x = 0; x < client.orca.w; x++) {
-			var item = '' + client.orca.glyphAt(x,y)
+			var item = client.orca.glyphAt(x,y)
 		  
 		  var searching = !found&& (y > curY || (y === curY && x >= curX))		  
-		  
-		  if(searching) {
-		  if ( (!ignoreBang && item === '*')) {
+
+		  if ( searching ) {		  
+		  if ( item === '*') {
+			  if ( allowBang ) {
 		  				this.moveTo(x,y)
 		  			 	found = true
+			  }
 		  			}
 			else if(  item !== '.') { 				
 				this.moveTo(x,y)
