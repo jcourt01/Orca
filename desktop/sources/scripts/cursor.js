@@ -326,8 +326,8 @@ var found = false
       for (let x = 0; x < client.orca.w; x++) {
 			var item = client.orca.glyphAt(x,y)
 		  
-		  var searching = !found&& (y > curY || (y === curY && x >= curX))		  
-
+		  		  var searching = !found && (y > curY || (y===curY && x>=curX))
+		 
 		  if ( searching ) {		  
 		  if ( item === '*') {
 			  if ( allowBang ) {
@@ -344,21 +344,46 @@ var found = false
 		}
 		}
 			
-  }
-  this.findPreviousItem = (ignoreBang=true) => {
-
-      for (let x =client.orca.w-1; x > -1; x-- ) {
-        for (let y =client.orca.h-1; y > -1; y--) {
-			var item = '' + client.orca.glyphAt(x,y)
-			var searching = (y < this.y) || (y=== this.y && x <= this.x)
 			
-			if(searching && (item !== '.' || (!ignoreBang && item === '*'))) {
-				this.moveTo(x,y)
-				break;
-			}
+		if ( !found ) {
+			client.accessibility.makeAnnouncement('No Items Found') 
+			
 		}
-	}
+  }
+  
+  this.gotoPreviousItem = (allowBang) => {
+
+var found=false
+	  var curX = this.x
+	  var curY = this.y
+	  
+	  for( let y=client.orca.h-1; y >= 0; y-- ) {
+      for (let x = client.orca.w-1; x >= 0; x--) {
+			var item = client.orca.glyphAt(x,y)
+		  
+		  var searching = !found && (y < curY || (y===curY && x<=curX))
+		  
+		  if ( searching ) {		  
+		  if ( item === '*') {
+			  if ( allowBang ) {
+		  				this.moveTo(x,y)
+		  			 	found = true
+			  }
+		  			}
+			else if(  item !== '.') { 				
+				this.moveTo(x,y)
+			 	found = true
+			} 
+		}
+	
+		}
+		}
 			
+			
+		if ( !found ) {
+			client.accessibility.makeAnnouncement('No Items Found') 
+			
+		}
   }
 
   this.trackChanges = (prevOrca, frame) => {
