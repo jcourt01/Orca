@@ -89,6 +89,7 @@ function Cursor (client) {
 
   this.write = (g) => {
     if (!client.orca.isAllowed(g)) { return }
+client.accessibility.makeAnnouncement(g)
     if (client.orca.write(this.x, this.y, g) && this.ins) {
       this.move(1, 0)
     }
