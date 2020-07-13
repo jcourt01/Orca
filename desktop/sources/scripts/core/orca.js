@@ -219,4 +219,54 @@ function Orca (library) {
   }
 
   this.reset()
+
+  this.createOrUpdateTable = (tbodyElementId, divElementId, headerElementText, header, tbodyRowElementId, row) => {
+	  var tbodyElement = document.querySelector('#' + tbodyElementId)
+	  
+	  if(!tbodyElement) {
+	  	var divElement = document.querySelector('#' + divElementId)
+		  var headerElement = document.createElement('h2')
+		  headerElement.textContent = headerElementText
+		  divElement.appendChild(headerElement)
+		  
+		  var tableElement = document.createElement('table')
+		  
+		  var thead = document.createElement('thead')
+		  
+		  		  var theadRow = document.createElement('tr')
+
+		  header.forEach(headerFunction)
+		  
+		  function headerFunction(value)  {
+		  var th = document.createElement('th')
+		  th.textContent = value
+		  theadRow.appendChild(th)
+		  }
+
+		  thead.appendChild(theadRow)
+		  tableElement.appendChild(thead)
+		  
+		  tbodyElement = document.createElement('tbody')
+		  				  tbodyElement.setAttribute('id', tbodyElementId)
+		  		  tableElement.appendChild(tbodyElement)
+		  
+		  divElement.appendChild(tableElement)
+	  }
+
+	  if(!document.querySelector('#' + tbodyRowElementId)) {
+	  	  var tbodyRowElement = document.createElement('tr')
+	  tbodyRowElement.setAttribute('id', tbodyRowElementId)
+	  
+row.forEach(rowFunction)
+	  
+	  function rowFunction(value) {	  
+	  var tableDataElement = document.createElement('td')
+	  tableDataElement.textContent = value
+	  tbodyRowElement.appendChild(tableDataElement)
+	  }
+	  
+	  tbodyElement.appendChild(tbodyRowElement)
+  }
+  }
+  
 }
