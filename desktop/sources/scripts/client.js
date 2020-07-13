@@ -360,6 +360,8 @@ this.accessibility = new Accessibility(this)
       const y = (parseInt(id) % frame) + 2
       this.write(key, x, y, 99, 3)
       this.write(text, x + 2, y, 99, 10)
+		
+		this.orca.createOrUpdateTable('guideTbody', 'guide', 'Guide', ['Command', 'Description'], 'guidetbodyRow-' + x + y, [key, text])
     }
   }
 
