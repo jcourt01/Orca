@@ -102,6 +102,7 @@ function Commander (client) {
     this.query = q
     client.cursor.ins = false
     client.update()
+	  this.announcement('Commander: On')
   }
 
   this.stop = () => {
@@ -109,10 +110,12 @@ function Commander (client) {
     this.query = ''
     this.historyIndex = this.history.length
     client.update()
+	  this.announcement('Commander: Off')
   }
 
   this.erase = function () {
     this.query = this.query.slice(0, -1)
+	  this.announcement()
     this.preview()
   }
 
@@ -122,6 +125,7 @@ function Commander (client) {
     if (key === 'Escape') { this.stop(); return }
     if (key.length > 1) { return }
     this.query += key
+	this.announcement()
     this.preview()
   }
 
@@ -149,6 +153,10 @@ function Commander (client) {
     const val = `${msg}`.substr(cmd.length + 1)
     if (!this.passives[cmd]) { return }
     this.passives[cmd](new Param(val), false)
+  }
+
+  this.announcement = function (text = this.query) {
+	  client.accessibility.makeAnnouncement(text)
   }
 
   // Events
