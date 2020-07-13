@@ -316,19 +316,18 @@ returnValue += `${value}`
 	return prevOrca
   }
 
-  this.gotoNextItem = (allowBang) => {
+  this.gotoNextItem = (allowBang=true) => {
 
 var found = false
 	  var curX = this.x
 	  var curY = this.y
 	  
-	  for( let y=0; y < client.orca.h; y++ ) {
-      for (let x = 0; x < client.orca.w; x++) {
+	  for( let y=curY; y < client.orca.h; y++ ) {
+		  if(found) {break}
+      for (let x = (y===curY) ? curX : 0; x < client.orca.w; x++) {
+		  if(found) {break}
 			var item = client.orca.glyphAt(x,y)
-		  
-		  		  var searching = !found && (y > curY || (y===curY && x>=curX))
 		 
-		  if ( searching ) {		  
 		  if ( item === '*') {
 			  if ( allowBang ) {
 		  				this.moveTo(x,y)
@@ -338,9 +337,7 @@ var found = false
 			else if(  item !== '.') { 				
 				this.moveTo(x,y)
 			 	found = true
-			} 
-		}
-	
+			} 	
 		}
 		}
 			
@@ -351,19 +348,18 @@ var found = false
 		}
   }
   
-  this.gotoPreviousItem = (allowBang) => {
+  this.gotoPreviousItem = (allowBang=true) => {
 
 var found=false
 	  var curX = this.x
 	  var curY = this.y
 	  
-	  for( let y=client.orca.h-1; y >= 0; y-- ) {
-      for (let x = client.orca.w-1; x >= 0; x--) {
+	  for( let y=curY; y >= 0; y-- ) {
+	  if(found) {break} 
+      for (let x = (y===curY) ? curX : client.orca.w-1; x >= 0; x--) {
+		  if(found) {break}
 			var item = client.orca.glyphAt(x,y)
 		  
-		  var searching = !found && (y < curY || (y===curY && x<=curX))
-		  
-		  if ( searching ) {		  
 		  if ( item === '*') {
 			  if ( allowBang ) {
 		  				this.moveTo(x,y)
@@ -374,7 +370,6 @@ var found=false
 				this.moveTo(x,y)
 			 	found = true
 			} 
-		}
 	
 		}
 		}
