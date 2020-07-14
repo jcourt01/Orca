@@ -129,7 +129,7 @@ client.accessibility.makeAnnouncement(g)
 		var y = this.y+this.h
 		value = this.readTextAt(x,y)
 		
-		 return `${this.w} X ${this.h} ${this.announcementAt(value, x, y)}` 
+		 return `${this.w} Width ${this.h} Height ${this.announcementAt(value, x, y)}` 
 	}
 
     return this.announcementAt(value, this.x, this.y)
