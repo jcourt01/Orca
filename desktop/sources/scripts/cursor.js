@@ -139,14 +139,14 @@ client.accessibility.makeAnnouncement(g)
   	  value = value === '.' ? 'empty' : value
   	  	  value = value === '*' ? 'bang' : value
 
-var state = 'None'
+var what = 'None'
 	  
     const index = client.orca.indexAt(x, y)
     const port = client.ports[index]
 	  
-    if (port) {state = ` ${port[3]}`}
-    else if (client.orca.lockAt(x, y)) {state = 'Locked'}
-	  return{value: `${value}`, state: `${state}`}
+    if (port) {what = ` ${port[3]}`}
+    else if (client.orca.lockAt(x, y)) {what = 'Locked'}
+	  return{value: `${value}`, what: `${what}`}
   }
   
   this.announcementAt = (value, x, y, includeXY=true, includeState=true) => {
@@ -385,6 +385,7 @@ var found=false
   this.trackChanges = (prevOrca, frame) => {
 	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
+	  var header = ['Change #', 'X,Y', 'What', 'Change']
 	 
       for (let y = this.minY; y <= this.maxY; y++) {
         for (let x = this.minX; x <= this.maxX; x++) {
@@ -393,60 +394,7 @@ var prevOrcaValue = this.getValue(prevOrca.shift(), x, y)
 			
 		  if ( prevOrcaValue.value !== newOrcaValue.value) {
 			  				  changeCount++
-			  
-			  var changeTableElement = document.querySelector('#changeTable')
-			  
-			  if(!changeTableElement) {
-			  	var changesElement = document.querySelector('#changes')
-				  var headerElement = document.createElement('h2')
-				  headerElement.textContent = 'Changes'
-				  changesElement.appendChild(headerElement)
-				  
-				  changeTableElement = document.createElement('table')
-				  				  changeTableElement.setAttribute('id', 'changeTable')
-				  
-				  var thead = document.createElement('thead')
-				  var theadRow = document.createElement('tr')
-				  
-				  var th = document.createElement('th')
-				  th.textContent = 'Frame'
-				  theadRow.appendChild(th)
-				  
-				  th = document.createElement('th')
-				  th.textContent = 'X,Y'
-				  theadRow.appendChild(th)
-				  
-				  th = document.createElement('th')
-				  th.textContent = 'Change'
-				  theadRow.appendChild(th)
-				  th = document.createElement('th')
-				  th.textContent = 'State'
-				  theadRow.appendChild(th)
-				  
-				  thead.appendChild(theadRow)
-				  changeTableElement.appendChild(thead)
-				  changesElement.appendChild(changeTableElement)
-			  }
-			  
-			  var tableRowElement = document.createElement('tr')
-			  var tableDataElement = document.createElement('td')
-			  tableDataElement.textContent = `${frame} #${changeCount}`
-			  tableRowElement.appendChild(tableDataElement)
-			  
-			  tableDataElement = document.createElement('td')
-			  tableDataElement.textContent = `${x},${y}`
-			  tableRowElement.appendChild(tableDataElement)
-			  
-			  tableDataElement = document.createElement('td')
-			  tableDataElement.textContent = `${prevOrcaValue.value} to ${newOrcaValue.value}`
-			  tableRowElement.appendChild(tableDataElement)
-			  
-			  tableDataElement = document.createElement('td')
-			  tableDataElement.textContent = `${newOrcaValue.state}`
-			  tableRowElement.appendChild(tableDataElement)
-			  
-			  changeTableElement.appendChild(tableRowElement)
-			  
+			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `${x},${y}`, `${newOrcaValue.what}`, `${prevOrcaValue.value} to ${newOrcaValue.value}`])
 		  }
       }
   }
