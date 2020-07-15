@@ -11,11 +11,14 @@ function Clock (client) {
   this.isPuppet = false
 
   this.speed = { value: 120, target: 120 }
+  this.oldSpeedValue = this.speed.value
+  this.frameOffset = 0
 
   this.start = function () {
     const memory = parseInt(window.localStorage.getItem('bpm'))
     const target = memory >= 60 ? memory : 120
     this.setSpeed(target, target, true)
+	  this.oldSpeedValue = target
     this.play()
   }
 
@@ -26,6 +29,7 @@ function Clock (client) {
 
   this.clearChanges = function () {
 	  document.querySelector('#changes').textContent = ""
+	  this.frameOffset = 0
   }
 
   this.run = function () {
@@ -35,6 +39,7 @@ function Clock (client) {
 
   this.setSpeed = (value, target = null, setTimer = false) => {
     if (this.speed.value === value && this.speed.target === target && this.timer) { return }
+	this.oldSpeedValue = this.speed.value
     if (value) { this.speed.value = clamp(value, 60, 300) }
     if (target) { this.speed.target = clamp(target, 60, 300) }
     if (setTimer === true) { this.setTimer(this.speed.value) }
