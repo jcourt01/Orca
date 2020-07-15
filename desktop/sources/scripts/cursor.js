@@ -83,10 +83,6 @@ function Cursor (client) {
     return client.orca.glyphAt(this.x, this.y)
   }
 
-  this.readTextAt = (x, y) => {
-    return '' + client.orca.glyphAt(x, y)
-  }
-
   this.write = (g) => {
     if (!client.orca.isAllowed(g)) { return }
  this.announcement(2, g)
@@ -182,11 +178,7 @@ if(detailLevel === 0) {
 }
 
  client.accessibility.makeAnnouncement(returnValue )
-  }
-  this.equalsCoords = (x,y) => {
-	  return (this.x === x && this.y === y)
-  }
-  
+  }  
   this.announceInsert = () => {
 	  var insStatus = this.ins ? 'Insert On' : 'Insert Off'
 	  client.accessibility.makeAnnouncement(insStatus)
