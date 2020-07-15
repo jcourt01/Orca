@@ -40,10 +40,6 @@ function Cursor (client) {
     client.toggleGuide(false)
 
     client.update()
-	
-	if ( !this.ins ) {
-	client.accessibility.makeAnnouncement(this.announcement())
-	}
   }
 
   this.selectAll = () => {
