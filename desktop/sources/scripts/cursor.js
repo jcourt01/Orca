@@ -177,21 +177,12 @@ var what = 'None'
 
 returnValue += `${value}`
 
-client.accessibility.makeAnnouncement(returnValue )
-  }
-
-  this.addPadding = () => {
-	  var returnValue = this.selection()
-	  
-	  var max = Math.random()*20
-	  
-	  for(let i=0; i<max; i++ ) {
-	  returnValue += '.'  
-	  }
-  
-  return returnValue
+if(detailLevel === 0) {
+	returnValue += client.accessibility.randomPads()
 }
 
+ client.accessibility.makeAnnouncement(returnValue )
+  }
   this.equalsCoords = (x,y) => {
 	  return (this.x === x && this.y === y)
   }
