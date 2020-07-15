@@ -102,15 +102,18 @@ function Commander (client) {
     this.query = q
     client.cursor.ins = false
     client.update()
-	  this.announcement('Commander: On')
+	  this.announcement(this.query.length > 0 ? `${this.query} On` : 'Commander: On')
   }
 
   this.stop = () => {
+	  if(this.isActive) {
+	  this.announcement(this.query.length > 0 ? `${this.query} Off` : 'Commander: Off')
+	  }
+	  
     this.isActive = false
     this.query = ''
     this.historyIndex = this.history.length
     client.update()
-	  this.announcement('Commander: Off')
   }
 
   this.erase = function () {
