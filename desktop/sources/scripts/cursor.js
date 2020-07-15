@@ -131,23 +131,7 @@ function Cursor (client) {
   this.hasSelection = () => {
 	      return this.w !== 0 || this.h !== 0
   }
-
-/*
-  this.announcement = () => {
-	  	  var value = this.readTextAt(this.x,this.y)
-	  
-    if (this.w !== 0 || this.h !== 0) {
-		var x = this.x+this.w
-		var y = this.y+this.h
-		value = this.readTextAt(x,y)
-		
-		 return `${this.w} Width ${this.h} Height ${this.announcementAt(value, x, y)}` 
-	}
-
-     return this.announcementAt(value, this.x, this.y)
-  }
-*/
-
+  
   this.getValue= (value, x, y) => {
   	  value = value === '.' ? 'empty' : value
   	  	  value = value === '*' ? 'bang' : value
@@ -162,22 +146,23 @@ var what = 'None'
 	  return{value: `${value}`, what: `${what}`}
   }
   
-  this.announcement = (detailLevel=this.detailLevel, value=client.orca.glyphAt(this.x,this.y), addRandom=false) => {
+  this.announcement = (detailLevel=this.detailLevel, value=client.orca.glyphAt(this.x,this.y), addRandom=false, x=this.x, y=this.y) => {
 	  value = value === '.' ? 'empty' : value
 	  	  value = value === '*' ? 'bang' : value
+	  	  	  value = this.hasSelection() ? `select ${value}` : value
 	  
 	  var returnValue = ''
 	  
 	  if(detailLevel > 0) {
-	  	returnValue += `${this.x},${this.y} `
+	  	returnValue += `${x},${y} `
 	  }
 	  
-    const index = client.orca.indexAt(this.x, this.y)
+    const index = client.orca.indexAt(x, y)
     const port = client.ports[index]
 	  
 	  if ( detailLevel > 1 ) {
     if (port) {returnValue += ` ${port[3]} `}
-    else if (client.orca.lockAt(this.x, this.y)) {returnValue += 'Locked'}
+    else if (client.orca.lockAt(x, y)) {returnValue += 'Locked'}
 }
 
 returnValue += `${value}`
