@@ -12,7 +12,7 @@ function Cursor (client) {
   this.maxY = 0
 
   this.ins = false
-	this.detailLevel = 1
+	this.detailLevel = 2
 
   this.start = () => {
     document.onmousedown = this.onMouseDown
@@ -98,6 +98,12 @@ function Cursor (client) {
   }
 
   this.erase = () => {
+	  if( this.ins && !this.hasSelection()) {
+	  this.announcement(0, this.selection())	  	
+	  } else {
+	  this.announcement(this.detailLevel, this.selection())
+	  }
+	  
     for (let y = this.minY; y <= this.maxY; y++) {
       for (let x = this.minX; x <= this.maxX; x++) {
         client.orca.write(x, y, '.')
@@ -120,6 +126,10 @@ function Cursor (client) {
     if (port) { return `${port[3]}` }
     if (client.orca.lockAt(this.x, this.y)) { return 'locked' }
     return 'empty'
+  }
+
+  this.hasSelection = () => {
+	      return this.w !== 0 || this.h !== 0
   }
 
 /*
