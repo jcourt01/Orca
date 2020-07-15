@@ -152,27 +152,27 @@ var what = 'None'
 	  return{value: `${value}`, what: `${what}`}
   }
   
-  this.announcement = (detailLevel=this.detailLevel, value=this.selection(), addRandom=false) => {
+  this.announcement = (detailLevel=this.detailLevel, value=client.orca.glyphAt(this.x,this.y), addRandom=false) => {
 	  value = value === '.' ? 'empty' : value
 	  	  value = value === '*' ? 'bang' : value
 	  
 	  var returnValue = ''
 	  
-	  if(detailLevel === 1) {
+	  if(detailLevel > 0) {
 	  	returnValue += `${this.x},${this.y} `
 	  }
 	  
     const index = client.orca.indexAt(this.x, this.y)
     const port = client.ports[index]
 	  
-	  if ( detailLevel === 2 ) {
+	  if ( detailLevel > 1 ) {
     if (port) {returnValue += ` ${port[3]} `}
     else if (client.orca.lockAt(this.x, this.y)) {returnValue += 'Locked'}
 }
 
 returnValue += `${value}`
 
-client.accessibility.makeAnnouncement(returnValue)
+client.accessibility.makeAnnouncement(returnValue )
   }
 
   this.addPadding = () => {
