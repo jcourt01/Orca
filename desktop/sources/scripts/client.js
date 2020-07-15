@@ -82,6 +82,7 @@ this.accessibility = new Accessibility(this)
     this.acels.set('Cursor', 'Toggle Block Comment', 'CmdOrCtrl+/', () => { this.cursor.comment() })
     this.acels.set('Cursor', 'Trigger Operator', 'CmdOrCtrl+P', () => { this.cursor.trigger() })
     this.acels.set('Cursor', 'Reset', 'Escape', () => { this.toggleGuide(false); this.commander.stop(); this.clear(); this.clock.isPaused = false; this.cursor.reset() })
+	    this.acels.set('Cursor', 'Change Detail Level', 'Alt+D', () => { this.cursor.changeDetailLevel() })	
 	    this.acels.set('Cursor', 'Read Text Under Cursor with Screen Reader', 'CmdOrCtrl+2', () => { this.accessibility.makeAnnouncement( this.cursor.addPadding()) })
 	
     this.acels.set('Move', 'Move North', 'ArrowUp', () => { this.cursor.move(0, 1) })
