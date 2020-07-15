@@ -12,6 +12,7 @@ function Cursor (client) {
   this.maxY = 0
 
   this.ins = false
+	this.detailLevel = 1
 
   this.start = () => {
     document.onmousedown = this.onMouseDown
@@ -39,7 +40,10 @@ function Cursor (client) {
     client.toggleGuide(false)
 
     client.update()
+	
+	if ( !this.ins ) {
 	client.accessibility.makeAnnouncement(this.announcement())
+	}
   }
 
   this.selectAll = () => {
@@ -132,7 +136,7 @@ client.accessibility.makeAnnouncement(g)
 		 return `${this.w} Width ${this.h} Height ${this.announcementAt(value, x, y)}` 
 	}
 
-    return this.announcementAt(value, this.x, this.y)
+     return this.announcementAt(value, this.x, this.y)
   }
 
   this.getValue= (value, x, y) => {
@@ -314,7 +318,7 @@ returnValue += `${value}`
 		}
 	}
 			
-	return prevOrca
+	return {bpm: client.clock.speed.value, block: prevOrca}
   }
 
   this.gotoNextItem = (allowBang=true) => {
@@ -386,11 +390,16 @@ var found=false
 	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
 	  var header = ['Change #', 'X,Y', 'What', 'Change']
+	  if ( client.clock.oldSpeedValue !== client.clock.speed.value) {
+		  				  changeCount++
+		  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${client.clock.oldSpeedValue} to ${client.clock.speed.value}`])
+		  client.clock.oldSpeedValue = client.clock.speed.value
+	  }
 	 
       for (let y = this.minY; y <= this.maxY; y++) {
         for (let x = this.minX; x <= this.maxX; x++) {
-var prevOrcaValue = this.getValue(prevOrca.shift(), x, y)
-			var newOrcaValue = this.getValue(newOrca.shift(), x, y)
+var prevOrcaValue = this.getValue(prevOrca.block.shift(), x, y)
+			var newOrcaValue = this.getValue(newOrca.block.shift(), x, y)
 			
 		  if ( prevOrcaValue.value !== newOrcaValue.value) {
 			  				  changeCount++
@@ -399,7 +408,17 @@ var prevOrcaValue = this.getValue(prevOrca.shift(), x, y)
       }
   }
     
-	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount}`)	
+	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} BPM ${newOrca.bpm}`)	
+  }
+
+  this.changeDetailLevel = () => {
+	  if ( this.detailLevel === 2) {
+	  	this.detailLevel = 0
+	  } else {
+	  	this.detailLevel++
+	  }
+	  
+	  client.accessibility.makeAnnouncement('Detail Level ' + this.detailLevel)
   }
 
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
