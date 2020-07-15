@@ -146,7 +146,7 @@ var what = 'None'
 	  return{value: `${value}`, what: `${what}`}
   }
   
-  this.announcement = (detailLevel=this.detailLevel, value=client.orca.glyphAt(this.x,this.y), addRandom=false, x=this.x, y=this.y) => {
+  this.announcement = (detailLevel=this.detailLevel, value=client.orca.glyphAt(this.x,this.y), x=this.x, y=this.y) => {
 	  value = value === '.' ? 'empty' : value
 	  	  value = value === '*' ? 'bang' : value
 	  	  	  value = this.hasSelection() ? `select ${value}` : value
@@ -340,11 +340,13 @@ var found = false
 		  if ( item === '*') {
 			  if ( allowBang ) {
 		  				this.moveTo(x,y)
+				  this.announcement(2)
 		  			 	found = true
 			  }
 		  			}
 			else if(  item !== '.') { 				
 				this.moveTo(x,y)
+								  this.announcement(2)
 			 	found = true
 			} 	
 		}
@@ -372,11 +374,13 @@ var found=false
 		  if ( item === '*') {
 			  if ( allowBang ) {
 		  				this.moveTo(x,y)
+				  				  this.announcement(2)
 		  			 	found = true
 			  }
 		  			}
 			else if(  item !== '.') { 				
 				this.moveTo(x,y)
+								  this.announcement(2)
 			 	found = true
 			} 
 	
