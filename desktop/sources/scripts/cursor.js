@@ -161,8 +161,18 @@ var what = 'None'
     const port = client.ports[index]
 	  
 	  if ( detailLevel > 1 ) {
-    if (port) {returnValue += ` ${port[3]} `}
-    else if (client.orca.lockAt(x, y)) {returnValue += 'Locked'}
+		  var what=''
+		  
+    if (port) {what= ` ${port[3]} `}
+    else if (client.orca.lockAt(x, y)) {what= ' Locked '}
+	
+	// short hand for selects at detail level 2, good for counting
+	if ( this.hasSelection()) {
+		value =` ${client.orca.glyphAt(x,y)} `
+		returnValue = `${this.w} Width ${this.h} Height ${x},${y} ${what}`
+	} else {
+		returnValue += what
+	}
 }
 
 returnValue += `${value}`
