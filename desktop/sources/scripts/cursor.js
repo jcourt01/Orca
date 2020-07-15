@@ -309,7 +309,7 @@ if(detailLevel === 0) {
 
       for (let y = this.minY; y <= this.maxY; y++) {
         for (let x = this.minX; x <= this.maxX; x++) {
-			prevOrca.push(this.readTextAt(x,y))
+			prevOrca.push(client.orca.glyphAt(x,y))
 		}
 	}
 			
@@ -389,10 +389,18 @@ var found=false
 	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
 	  var header = ['Change #', 'X,Y', 'What', 'Change']
-	  if ( client.clock.oldSpeedValue !== client.clock.speed.value) {
+	  
+	  if ( client.clock.frameOffset === 0) {
+		  client.clock.oldSpeedvalue = newOrca.bpm
+		  client.clock.frameOffset++
+	  } else {
+	  	client.clock.frameOffset++
+	  }
+	  
+	  if ( client.clock.oldSpeedValue !== newOrca.bpm) {
 		  				  changeCount++
-		  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${client.clock.oldSpeedValue} to ${client.clock.speed.value}`])
-		  client.clock.oldSpeedValue = client.clock.speed.value
+		  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${client.clock.oldSpeedValue} to ${newOrca.bpm}`])
+		  client.clock.oldSpeedValue = newOrca.bpm
 	  }
 	 
       for (let y = this.minY; y <= this.maxY; y++) {
