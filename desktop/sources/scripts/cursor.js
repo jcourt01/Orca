@@ -89,8 +89,9 @@ function Cursor (client) {
 
   this.write = (g) => {
     if (!client.orca.isAllowed(g)) { return }
-client.accessibility.makeAnnouncement(g)
+ this.announcement(2, g)
     if (client.orca.write(this.x, this.y, g) && this.ins) {
+		this.announcement(0, g)
       this.move(1, 0)
     }
     client.history.record(client.orca.s)
@@ -121,6 +122,7 @@ client.accessibility.makeAnnouncement(g)
     return 'empty'
   }
 
+/*
   this.announcement = () => {
 	  	  var value = this.readTextAt(this.x,this.y)
 	  
@@ -134,6 +136,7 @@ client.accessibility.makeAnnouncement(g)
 
      return this.announcementAt(value, this.x, this.y)
   }
+*/
 
   this.getValue= (value, x, y) => {
   	  value = value === '.' ? 'empty' : value
@@ -149,27 +152,27 @@ var what = 'None'
 	  return{value: `${value}`, what: `${what}`}
   }
   
-  this.announcementAt = (value, x, y, includeXY=true, includeState=true) => {
+  this.announcement = (detailLevel=this.detailLevel, value=this.selection(), addRandom=false) => {
 	  value = value === '.' ? 'empty' : value
 	  	  value = value === '*' ? 'bang' : value
 	  
 	  var returnValue = ''
 	  
-	  if(includeXY) {
-	  	returnValue += `${x},${y} `
+	  if(detailLevel === 1) {
+	  	returnValue += `${this.x},${this.y} `
 	  }
 	  
-    const index = client.orca.indexAt(x, y)
+    const index = client.orca.indexAt(this.x, this.y)
     const port = client.ports[index]
 	  
-	  if ( includeState ) {
+	  if ( detailLevel === 2 ) {
     if (port) {returnValue += ` ${port[3]} `}
-    else if (client.orca.lockAt(x, y)) {returnValue += 'Locked'}
+    else if (client.orca.lockAt(this.x, this.y)) {returnValue += 'Locked'}
 }
 
 returnValue += `${value}`
 
-    return returnValue
+client.accessibility.makeAnnouncement(returnValue)
   }
 
   this.addPadding = () => {
