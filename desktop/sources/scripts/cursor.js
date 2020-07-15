@@ -146,9 +146,9 @@ var what = 'None'
 	  return{value: `${value}`, what: `${what}`}
   }
   
-  this.announcement = (detailLevel=this.detailLevel, value=client.orca.glyphAt(this.x,this.y), x=this.x, y=this.y) => {
-	  value = value === '.' ? 'empty' : value
-	  	  value = value === '*' ? 'bang' : value
+  this.announcement = (detailLevel=this.detailLevel, value=this.selection(), x=this.x, y=this.y) => {
+	  value = value.length === 2 && value.includes('.') ? 'empty' : value
+	  	  value = value.length === 2 && value.includes('*') ? 'bang' : value
 	  	  	  value = this.hasSelection() ? `select ${value}` : value
 	  
 	  var returnValue = ''
