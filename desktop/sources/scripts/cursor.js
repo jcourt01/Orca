@@ -308,24 +308,26 @@ if(detailLevel === 0) {
 	return {bpm: client.clock.speed.value, block: prevOrca}
   }
 
-  this.gotoNextItem = (allowBang=true) => {
-
+  this.gotoNextItem = (str='') => {
 var found = false
 	  var curX = this.x
 	  var curY = this.y
-	  
+
 	  for( let y=curY; y < client.orca.h; y++ ) {
 		  if(found) {break}
-      for (let x = (y===curY) ? curX : 0; x < client.orca.w; x++) {
+      for (let x = (y===curY) ? curX : 0; x < client.orca.w - str.length; x++) {
 		  if(found) {break}
 			var item = client.orca.glyphAt(x,y)
-		 
-		  if ( item === '*') {
-			  if ( allowBang ) {
+
+		 var chunk = ''
+		  for (let i=x; i<x+str.length; i++) {
+		  	chunk += client.orca.glyphAt(i,y)
+		  }
+		  
+		  if ( str.length > 0 && str === chunk) {
 		  				this.moveTo(x,y)
 				  this.announcement(2)
 		  			 	found = true
-			  }
 		  			}
 			else if(  item !== '.') { 				
 				this.moveTo(x,y)
@@ -337,7 +339,7 @@ var found = false
 			
 			
 		if ( !found ) {
-			client.accessibility.makeAnnouncement('No Items Found') 
+			this.announcement(0, 'No Items Found' ) 
 			
 		}
   }
