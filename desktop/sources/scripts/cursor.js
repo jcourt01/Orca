@@ -329,7 +329,7 @@ var found = false
 				  this.announcement(2)
 		  			 	found = true
 		  			}
-			else if(  item !== '.') { 				
+			else if( str.length === 0 && item !== '.') { 				
 				this.moveTo(x,y)
 								  this.announcement(2)
 			 	found = true
@@ -339,31 +339,33 @@ var found = false
 			
 			
 		if ( !found ) {
-			this.announcement(0, 'No Items Found' ) 
+			this.announcement(0, 'No Items Found') 
 			
 		}
   }
   
-  this.gotoPreviousItem = (allowBang=true) => {
-
+  this.gotoPreviousItem = (str='') => {
 var found=false
 	  var curX = this.x
 	  var curY = this.y
 	  
 	  for( let y=curY; y >= 0; y-- ) {
 	  if(found) {break} 
-      for (let x = (y===curY) ? curX : client.orca.w-1; x >= 0; x--) {
+      for (let x = (y===curY) ? curX : client.orca.w-1; x >= str.length; x--) {
 		  if(found) {break}
 			var item = client.orca.glyphAt(x,y)
 		  
-		  if ( item === '*') {
-			  if ( allowBang ) {
-		  				this.moveTo(x,y)
+		 var chunk = ''
+		  for (let i=x; i>x-str.length; i--) {
+		  	chunk = client.orca.glyphAt(i,y) + chunk
+		  }
+		  
+		  if ( str.length > 0 && str === chunk) {
+		  				this.moveTo(x-str.length+1,y)
 				  				  this.announcement(2)
 		  			 	found = true
-			  }
 		  			}
-			else if(  item !== '.') { 				
+			else if( str.length === 0 && item !== '.') { 				
 				this.moveTo(x,y)
 								  this.announcement(2)
 			 	found = true
@@ -371,7 +373,6 @@ var found=false
 	
 		}
 		}
-			
 			
 		if ( !found ) {
 			client.accessibility.makeAnnouncement('No Items Found') 
