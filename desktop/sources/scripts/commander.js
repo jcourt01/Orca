@@ -61,6 +61,7 @@ function Commander (client) {
     },
     // Edit
     find: (p) => { client.cursor.find(p.str) },
+	    findnext: (p) => { client.cursor.gotoNextItem(p.str) },
     select: (p) => { client.cursor.select(p.x, p.y, p.w || 0, p.h || 0) },
     inject: (p, origin) => {
       const block = client.source.cache[p._str + '.orca']
@@ -106,10 +107,6 @@ function Commander (client) {
   }
 
   this.stop = () => {
-	  if(this.isActive) {
-	  this.announcement(this.query.length > 0 ? `${this.query} Off` : 'Commander: Off')
-	  }
-	  
     this.isActive = false
     this.query = ''
     this.historyIndex = this.history.length
