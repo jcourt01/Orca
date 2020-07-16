@@ -11,7 +11,7 @@ function Orca (library) {
   this.locks = []
   this.runtime = []
   this.variables = {}
-  this.ranoperators = []
+  this.ranOperators = []
 
   this.run = function () {
     this.runtime = this.parse()
@@ -76,7 +76,7 @@ function Orca (library) {
       if (this.lockAt(operator.x, operator.y)) { continue }
       if (operator.passive || operator.hasNeighbor('*')) {
         operator.run()
-		  ranOperators.push(operator)
+		  this.ranOperators.push(operator)
       }
     }
   }
