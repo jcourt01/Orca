@@ -9,6 +9,7 @@ function Operator (orca, x, y, glyph = '.', passive = false) {
   this.glyph = passive ? glyph.toUpperCase() : glyph
   this.info = '--'
   this.ports = {}
+  this.outputValue = 'None'
 
   // Actions
 
@@ -28,11 +29,13 @@ function Operator (orca, x, y, glyph = '.', passive = false) {
     if (!port) { console.warn(this.name, 'Trying to output, but no port'); return }
     if (!g) { return }
     orca.write(this.x + port.x, this.y + port.y, this.shouldUpperCase() === true ? `${g}`.toUpperCase() : g)
+	this.outputValue =  this.shouldUpperCase() === true ? `${g}`.toUpperCase() : g
   }
 
   this.bang = function (b) {
     if (!this.ports.output) { console.warn(this.name, 'Trying to bang, but no port'); return }
     orca.write(this.x + this.ports.output.x, this.y + this.ports.output.y, b ? '*' : '.')
+	this.outputValue = b ? 'bang' : 'empty'
     orca.lock(this.x + this.ports.output.x, this.y + this.ports.output.y)
   }
 
