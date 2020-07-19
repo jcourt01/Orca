@@ -150,7 +150,8 @@ var what = 'None'
 	  var returnValue = ''
 	  
 	  if(detailLevel > 0) {
-	  	returnValue += `${x},${y} `
+		  const hasRan = client.orca.hasRanAt(this.x,this.y) ? 'Ran' : ''
+	  	returnValue += `${hasRan} ${x},${y} `
 	  }
 	  
     const index = client.orca.indexAt(x, y)
@@ -383,7 +384,7 @@ var found=false
   this.trackChanges = (prevOrca, frame) => {
 	  var newOrca = this.getPrevOrca()
 	  var changeCount = 0
-	  var header = ['Change #', 'X,Y', 'What', 'Change']
+	  const header = ['Change #', 'X,Y', 'Name', 'Output']
 	  
 	  if ( client.clock.frameOffset === 0) {
 		  client.clock.oldSpeedvalue = newOrca.bpm
@@ -398,19 +399,21 @@ var found=false
 		  client.clock.oldSpeedValue = newOrca.bpm
 	  }
 	 
-      for (let y = this.minY; y <= this.maxY; y++) {
-        for (let x = this.minX; x <= this.maxX; x++) {
-var prevOrcaValue = this.getValue(prevOrca.block.shift(), x, y)
-			var newOrcaValue = this.getValue(newOrca.block.shift(), x, y)
-			
-		  if ( prevOrcaValue.value !== newOrcaValue.value) {
-			  				  changeCount++
-			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `${x},${y}`, `${newOrcaValue.what}`, `${prevOrcaValue.value} to ${newOrcaValue.value}`])
-		  }
-      }
+    for (const operator of client.orca.getRanOperators()) {
+		if ( this.selected(operator.x, operator.y)) {
+			changeCount++
+			this.addRanOperator(frame, changeCount, header, operator)
+		} else {
+			changeCount++
+			this.addRanOperator(frame, changeCount, header, operator)
+		}
   }
     
-	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} BPM ${newOrca.bpm}`)	
+	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} BPM ${newOrca.bpm} runtime ${client.orca.runtime.length}`)	
+  }
+
+  this.addRanOperator = (frame, changeCount, header, operator) => {
+			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `${operator.x},${operator.y}`, `${operator.name} (${operator.glyph})`, `${operator.outputValue}`])  	
   }
 
   this.changeDetailLevel = () => {
