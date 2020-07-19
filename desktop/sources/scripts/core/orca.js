@@ -11,7 +11,6 @@ function Orca (library) {
   this.locks = []
   this.runtime = []
   this.variables = {}
-  this.ranOperators = []
 
   this.run = function () {
     this.runtime = this.parse()
@@ -73,10 +72,16 @@ function Orca (library) {
   this.operate = function (operators) {
     this.release()
     for (const operator of operators) {
+		operator.hasRan = false
+		
       if (this.lockAt(operator.x, operator.y)) { continue }
       if (operator.passive || operator.hasNeighbor('*')) {
+		  operator.hasRan = operator.hasNeighbor('*')
         operator.run()
-		  this.ranOperators.push(operator)
+		  
+		  if(this.lockAt(operator.x, operator.y) && !operator.passive) {
+			  operator.hasRan = true
+		  }
       }
     }
   }
@@ -177,6 +182,18 @@ function Orca (library) {
 
   this.glyphAt = function (x, y) {
     return this.s.charAt(this.indexAt(x, y))
+  }
+
+  this.hasRanAt = (x,y) => {
+  	var hasRan = false
+
+    for (const operator of this.runtime) {
+		hasRan = operator.x === x && operator.y === y && operator.hasRan
+		
+		if(hasRan) {break}
+		}	  
+		
+		return hasRan
   }
 
   this.valueAt = function (x, y) {
