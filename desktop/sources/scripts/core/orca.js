@@ -196,6 +196,16 @@ function Orca (library) {
 		return hasRan
   }
 
+  this.getRanOperators = () => {
+const ranOperators = []
+
+    for (const operator of this.runtime) {
+    	if ( operator.hasRan ) {ranOperators.push(operator)}
+    }
+	
+	  return ranOperators	 
+  }
+
   this.valueAt = function (x, y) {
     return this.valueOf(this.glyphAt(x, y))
   }
