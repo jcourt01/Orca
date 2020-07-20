@@ -370,7 +370,7 @@ var found=false
 
   this.trackChanges = (frame) => {
 	  var changeCount = 0
-	  const header = ['Change #', 'X,Y', 'Name', 'Output']
+	  const header = ['Change #', 'X,Y', 'Name', 'Output', 'From']
 	  const newSpeedValue = client.clock.speed.value
 	  
 	  if ( client.clock.frameOffset === 0) {
@@ -399,7 +399,7 @@ var found=false
   if ( bpmChange) {
 	  				  changeCount++
 	  bpmChangeText = `${client.clock.oldSpeedValue} to ${newSpeedValue}`
-	  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${bpmChangeText}`])
+	  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${bpmChangeText}`, 'none'])
 	  bpmChangeText = 'BPM ' + bpmChangeText
 	  client.clock.oldSpeedValue = newSpeedValue
   }
@@ -409,7 +409,7 @@ var found=false
   }
 
   this.addRanOperator = (frame, changeCount, header, operator) => {
-			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `${operator.x},${operator.y}`, `${operator.name} (${operator.glyph})`, `${operator.outputValue}`])  	
+			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `${operator.x},${operator.y}`, !operator.name || operator.name === 'null' ? '*' : `${operator.name} (${operator.glyph})`, `${operator.outputValue}`, `${operator.from}`])  	
   }
 
   this.changeDetailLevel = () => {
