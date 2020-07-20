@@ -63,6 +63,7 @@ function Commander (client) {
     find: (p) => { client.cursor.find(p.str) },
 	    findnext: (p) => { client.cursor.gotoNextItem(p.str) },
 		    findprev: (p) => { client.cursor.gotoPreviousItem(p.str) },
+		    goto: (p) => { client.cursor.goto(p.str.split(',')) },	
     select: (p) => { client.cursor.select(p.x, p.y, p.w || 0, p.h || 0) },
     inject: (p, origin) => {
       const block = client.source.cache[p._str + '.orca']
