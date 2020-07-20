@@ -381,35 +381,43 @@ var found=false
 		}
   }
 
-  this.trackChanges = (prevOrca, frame) => {
-	  var newOrca = this.getPrevOrca()
+  this.trackChanges = (frame) => {
 	  var changeCount = 0
 	  const header = ['Change #', 'X,Y', 'Name', 'Output']
+	  const newSpeedValue = client.clock.speed.value
 	  
 	  if ( client.clock.frameOffset === 0) {
-		  client.clock.oldSpeedvalue = newOrca.bpm
+		  client.clock.oldSpeedvalue = newSpeedValue
 		  client.clock.frameOffset++
 	  } else {
 	  	client.clock.frameOffset++
 	  }
 	  
-	  if ( client.clock.oldSpeedValue !== newOrca.bpm) {
+	  const bpmChange = client.clock.oldSpeedValue !== newSpeedValue
+	  var bpmChangeText = ''
+	  
+	  if ( bpmChange) {
 		  				  changeCount++
-		  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${client.clock.oldSpeedValue} to ${newOrca.bpm}`])
-		  client.clock.oldSpeedValue = newOrca.bpm
+		  bpmChangeText = `${client.clock.oldSpeedValue} to ${newSpeedValue}`
+		  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${bpmChangeText}`])
+		  bpmChangeText = 'BPM ' + bpmChangeText
+		  client.clock.oldSpeedValue = newSpeedValue
 	  }
 	 
     for (const operator of client.orca.getRanOperators()) {
-		if ( this.selected(operator.x, operator.y)) {
+		if ( this.hasSelection() ) { // selection
+		if ( this.selected(operator.x, operator.y)) { // selected
 			changeCount++
 			this.addRanOperator(frame, changeCount, header, operator)
-		} else {
+		} // selected
+	} // selection
+		 else {
 			changeCount++
 			this.addRanOperator(frame, changeCount, header, operator)
 		}
   }
     
-	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} BPM ${newOrca.bpm} runtime ${client.orca.runtime.length}`)	
+	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} ${bpmChangeText}`)	
   }
 
   this.addRanOperator = (frame, changeCount, header, operator) => {
