@@ -106,7 +106,7 @@ this.accessibility = new Accessibility(this)
 	    this.acels.set('Move', 'Goto Previous Item', 'Alt+Shift+j', () => { this.cursor.gotoPreviousItem() } )
 
     this.acels.set('Clock', 'Play/Pause', 'Space', () => { if (this.cursor.ins) { this.cursor.move(1, 0) } else { this.clock.togglePlay(false) } })
-    this.acels.set('Clock', 'Frame By Frame', 'CmdOrCtrl+F', () => { var prevOrca = this.cursor.getPrevOrca(); this.clock.touch(); this.cursor.trackChanges(prevOrca, this.orca.f); })
+    this.acels.set('Clock', 'Frame By Frame', 'CmdOrCtrl+F', () => { this.clock.touch(); this.cursor.trackChanges(this.orca.f); })
     this.acels.set('Clock', 'Reset Frame', 'CmdOrCtrl+Shift+R', () => { this.clock.setFrame(0) })
 	    this.acels.set('Clock', 'Clear Changes List', 'Alt+X', () => { this.clock.clearChanges() } )
     this.acels.set('Clock', 'Incr. Speed', '>', () => { this.clock.modSpeed(1) })
