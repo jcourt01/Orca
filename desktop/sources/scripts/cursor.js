@@ -306,6 +306,86 @@ if(detailLevel === 0) {
 	  }
   }
 
+  this.gotoNextRanItem = () => {
+var found = false
+	  var curX = this.x
+	  var curY = this.y
+	  const operators = client.orca.getRanOperators()
+
+	  for( let y=curY; y < client.orca.h; y++ ) {
+		  if(found) {break}
+      for (let x = (y===curY) ? curX : 0; x < client.orca.w; x++) {
+		  if(found) {break}
+		  
+		  for ( const operator of operators ) { // operator
+			  		  if(found) {break}
+		  	
+					  if ( this.hasSelection()) { // selection
+						  if ( this.selected(x,y)) { // selected
+							  						  if ( operator.x === x && operator.y === y && operator.hasRan) { // found
+		  				this.moveTo(x,y)
+				  this.announcement(2)
+		  			 	found = true						  	
+													  } //found
+						  } // selected
+					  } // selection
+					  else { // not selected
+						  if ( operator.x === x && operator.y === y && operator.hasRan) { // found
+		  				this.moveTo(x,y)
+				  this.announcement(2)
+		  			 	found = true
+						  } // found
+					  } // not selected
+		  } // operator
+
+		}
+		}
+			
+		if ( !found ) {
+			this.announcement(0, 'No Ran Items Found' + this.hasSelection() ? ' in selection' : '' ) 
+			
+		}
+  }
+
+  this.gotoPreviousRanItem = () => {
+var found=false
+	  var curX = this.x
+	  var curY = this.y
+	  const operators = client.orca.getRanOperators()
+	  
+	  for( let y=curY; y >= 0; y-- ) {
+	  if(found) {break} 
+      for (let x = (y===curY) ? curX : client.orca.w-1; x >= 0; x--) {
+		  if(found) {break}
+		  for ( const operator of operators ) { // operator
+			  		  if(found) {break}
+		  	
+					  if ( this.hasSelection()) { // selection
+						  if ( this.selected(x,y)) { // selected
+							  						  if ( operator.x === x && operator.y === y && operator.hasRan) { // found
+		  				this.moveTo(x,y)
+				  this.announcement(2)
+		  			 	found = true						  	
+													  } //found
+						  } // selected
+					  } // selection
+					  else { // not selected
+						  if ( operator.x === x && operator.y === y && operator.hasRan) { // found
+		  				this.moveTo(x,y)
+				  this.announcement(2)
+		  			 	found = true
+						  } // found
+					  } // not selected
+		  } // operator
+		}
+		}
+			
+		if ( !found ) {
+			this.announcement(0, 'No Ran Items Found' + (this.hasSelection() ? ' in selection' : '') ) 
+			
+		}
+  }
+  
   this.gotoNextItem = (str='') => {
 var found = false
 	  var curX = this.x
@@ -373,7 +453,7 @@ var found=false
 		}
 			
 		if ( !found ) {
-			client.accessibility.makeAnnouncement('No Items Found') 
+			this.announcement(0, 'No Items Found') 
 			
 		}
   }
