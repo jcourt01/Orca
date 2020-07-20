@@ -296,6 +296,16 @@ if(detailLevel === 0) {
     e.preventDefault()
   }
 
+  this.goto = (args) => {
+	  if(args.length === 2) {
+		  const x = parseInt(args[0])
+		  const y = parseInt(args[1])
+
+		  				this.moveTo(x,y)
+				  this.announcement(2)	  	
+	  }
+  }
+
   this.gotoNextItem = (str='') => {
 var found = false
 	  var curX = this.x
