@@ -296,19 +296,6 @@ if(detailLevel === 0) {
     e.preventDefault()
   }
 
-  this.getPrevOrca = () => {
-
-	  var prevOrca = []
-
-      for (let y = this.minY; y <= this.maxY; y++) {
-        for (let x = this.minX; x <= this.maxX; x++) {
-			prevOrca.push(client.orca.glyphAt(x,y))
-		}
-	}
-			
-	return {bpm: client.clock.speed.value, block: prevOrca}
-  }
-
   this.gotoNextItem = (str='') => {
 var found = false
 	  var curX = this.x
@@ -393,17 +380,6 @@ var found=false
 	  	client.clock.frameOffset++
 	  }
 	  
-	  const bpmChange = client.clock.oldSpeedValue !== newSpeedValue
-	  var bpmChangeText = ''
-	  
-	  if ( bpmChange) {
-		  				  changeCount++
-		  bpmChangeText = `${client.clock.oldSpeedValue} to ${newSpeedValue}`
-		  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${bpmChangeText}`])
-		  bpmChangeText = 'BPM ' + bpmChangeText
-		  client.clock.oldSpeedValue = newSpeedValue
-	  }
-	 
     for (const operator of client.orca.getRanOperators()) {
 		if ( this.hasSelection() ) { // selection
 		if ( this.selected(operator.x, operator.y)) { // selected
@@ -417,6 +393,18 @@ var found=false
 		}
   }
     
+  const bpmChange = client.clock.oldSpeedValue !== newSpeedValue
+  var bpmChangeText = ''
+  
+  if ( bpmChange) {
+	  				  changeCount++
+	  bpmChangeText = `${client.clock.oldSpeedValue} to ${newSpeedValue}`
+	  			  		client.orca.createOrUpdateTable('changeTbody', 'changes', 'Changes', header, 'changeTbodyRow-' + frame + changeCount, [`${frame} #${changeCount}`, `N/A`, 'BPM', `${bpmChangeText}`])
+	  bpmChangeText = 'BPM ' + bpmChangeText
+	  client.clock.oldSpeedValue = newSpeedValue
+  }
+
+	
 	client.accessibility.makeAnnouncement(`Frame ${frame} Changes ${changeCount} ${bpmChangeText}`)	
   }
 
